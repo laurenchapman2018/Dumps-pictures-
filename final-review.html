@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Grandpa's Photo Picks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFEAE1;
+    --paper-2:#E4DDCF;
+    --paper-3:#F7F4EE;
+    --ink:#2B2620;
+    --ink-soft:#6B6153;
+    --accent:#8C6229;
+    --accent-ink:#FFFFFF;
+    --yes:#4B7A5B;
+    --yes-ink:#FFFFFF;
+    --maybe:#B7862B;
+    --maybe-ink:#FFFFFF;
+    --no:#A15340;
+    --no-ink:#FFFFFF;
+    --line:#D9CFBD;
+    --shadow: 0 1px 2px rgba(43,38,32,0.06), 0 8px 24px rgba(43,38,32,0.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#211D17;
+      --paper-2:#2B261E;
+      --paper-3:#181510;
+      --ink:#EDE6D9;
+      --ink-soft:#B3A996;
+      --accent:#D2A356;
+      --accent-ink:#211D17;
+      --yes:#6FA37E;
+      --yes-ink:#12241A;
+      --maybe:#D8B25B;
+      --maybe-ink:#241A08;
+      --no:#C97B67;
+      --no-ink:#2B140E;
+      --line:#3B3428;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#211D17;
+    --paper-2:#2B261E;
+    --paper-3:#181510;
+    --ink:#EDE6D9;
+    --ink-soft:#B3A996;
+    --accent:#D2A356;
+    --accent-ink:#211D17;
+    --yes:#6FA37E;
+    --yes-ink:#12241A;
+    --maybe:#D8B25B;
+    --maybe-ink:#241A08;
+    --no:#C97B67;
+    --no-ink:#2B140E;
+    --line:#3B3428;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Public Sans", system-ui, -apple-system, sans-serif;
+    min-height:100vh;
+    padding-block:16px;
+    padding-inline:16px;
+  }
+  h1,h2{
+    font-family:"Bitter", Georgia, serif;
+    text-wrap:balance;
+    margin:0 0 8px 0;
+  }
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    font-size:12px;
+    font-weight:700;
+    color:var(--accent);
+    margin:0 0 10px 0;
+  }
+  .sub{ color:var(--ink-soft); font-size:17px; line-height:1.5; margin:0; }
+  .hidden{ display:none !important; }
+  button{ font-family:inherit; }
+  a{ color:var(--accent); }
+
+  .corner-link{
+    position:fixed;
+    top:14px;
+    right:16px;
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink-soft);
+    text-decoration:none;
+    background:var(--paper-3);
+    border:1px solid var(--line);
+    padding:6px 10px;
+    border-radius:999px;
+    z-index:20;
+  }
+  .corner-link:hover{ color:var(--accent); border-color:var(--accent); }
+
+  .screen{
+    max-width:640px;
+    margin:0 auto;
+    min-height:calc(100vh - 48px);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  #screen-review{ max-width:1100px; }
+  #screen-name{ max-width:640px; }
+  #screen-done{ max-width:640px; }
+
+  .card{
+    background:var(--paper-3);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:36px 28px;
+    box-shadow:var(--shadow);
+    text-align:center;
+  }
+  .card h1{ font-size:30px; }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    border:none;
+    border-radius:14px;
+    padding:16px 22px;
+    font-size:17px;
+    font-weight:700;
+    cursor:pointer;
+    width:100%;
+  }
+  .btn-primary{ background:var(--accent); color:var(--accent-ink); }
+  .btn-secondary{ background:var(--paper-2); color:var(--ink); border:1px solid var(--line); }
+  .btn-large{ font-size:18px; padding:18px 22px; }
+  .link-btn{
+    background:none;
+    border:none;
+    color:var(--ink-soft);
+    text-decoration:underline;
+    font-size:14px;
+    cursor:pointer;
+    padding:8px;
+  }
+
+  .name-card{ margin-top:8vh; }
+  .name-card .sub{ margin-bottom:22px; }
+  .continue-as{ display:flex; flex-direction:column; gap:10px; margin-bottom:8px; }
+  .name-entry{ display:flex; flex-direction:column; gap:12px; }
+  #voterInput{
+    font-size:17px;
+    padding:14px 16px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--ink);
+    text-align:center;
+  }
+  #voterInput:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+  .name-divider{ color:var(--ink-soft); font-size:13px; margin:2px 0; }
+
+  /* --- review screen --- */
+  #screen-review{ justify-content:flex-start; padding-top:8px; }
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:10px;
+  }
+  .voter-badge{
+    font-weight:700;
+    font-size:17px;
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    padding:7px 16px;
+    border-radius:999px;
+  }
+  .progress-text{
+    font-size:17px;
+    color:var(--ink-soft);
+    font-variant-numeric:tabular-nums;
+  }
+  .progress-track{
+    height:8px;
+    background:var(--paper-2);
+    border-radius:999px;
+    overflow:hidden;
+    margin-bottom:20px;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--accent);
+    border-radius:999px;
+    transition:width .25s ease;
+  }
+
+  .stage{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:26px;
+  }
+  .photo-frame{
+    flex:1;
+    background:var(--paper-3);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:14px;
+    box-shadow:var(--shadow);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:58vh;
+  }
+  .photo-frame img{
+    max-width:100%;
+    max-height:62vh;
+    display:block;
+    border-radius:10px;
+    object-fit:contain;
+    opacity:1;
+    transition:opacity .2s ease;
+  }
+  .photo-frame img.loading{ opacity:.2; }
+  .nav-btn{
+    flex:0 0 auto;
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--paper-3);
+    color:var(--ink);
+    font-size:28px;
+    cursor:pointer;
+    line-height:1;
+  }
+  .nav-btn:disabled{ opacity:0.3; cursor:default; }
+
+  .choice-row{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:14px;
+  }
+  .choice-btn{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    border:none;
+    border-radius:18px;
+    padding:22px 10px;
+    font-size:20px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .choice-icon{ font-size:34px; line-height:1; }
+  .choice-no{ background:var(--paper-2); color:var(--no); border:2px solid var(--no); }
+  .choice-maybe{ background:var(--paper-2); color:var(--maybe); border:2px solid var(--maybe); }
+  .choice-yes{ background:var(--paper-2); color:var(--yes); border:2px solid var(--yes); }
+  .choice-btn.active.choice-no{ background:var(--no); color:var(--no-ink); }
+  .choice-btn.active.choice-maybe{ background:var(--maybe); color:var(--maybe-ink); }
+  .choice-btn.active.choice-yes{ background:var(--yes); color:var(--yes-ink); }
+  .current-choice-note{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:16px;
+    margin-top:14px;
+    min-height:20px;
+  }
+
+  .my-list-btn{
+    font-size:14px;
+    font-weight:600;
+    color:var(--accent);
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    padding:7px 14px;
+    border-radius:999px;
+    cursor:pointer;
+  }
+
+  .done-actions{ display:flex; flex-direction:column; gap:10px; margin-top:20px; }
+  .export-box{
+    text-align:left;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px;
+    font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size:13px;
+    line-height:1.6;
+    max-height:220px;
+    overflow-y:auto;
+    resize:vertical;
+    color:var(--ink);
+    margin:18px 0;
+  }
+  .copy-note{ font-size:13px; color:var(--ink-soft); margin-top:6px; }
+  .copied-flash{ color:var(--yes); font-weight:700; }
+
+  /* --- results screen --- */
+  #screen-results{ max-width:900px; display:block; padding-top:8px; }
+  .results-header{
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:20px;
+    padding-top:8px;
+  }
+  .results-actions{ display:flex; align-items:center; gap:14px; }
+  .results-actions .btn{ width:auto; white-space:nowrap; }
+  .results-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(150px,1fr));
+    gap:14px;
+  }
+  .result-card{
+    background:var(--paper-3);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  .result-card img{
+    width:100%;
+    height:110px;
+    object-fit:cover;
+    display:block;
+    background:var(--paper-2);
+  }
+  .result-meta{ padding:8px 10px 10px; }
+  .result-index{ font-size:11px; color:var(--ink-soft); margin-bottom:6px; font-variant-numeric:tabular-nums; }
+  .result-tags{ display:flex; flex-wrap:wrap; gap:4px; }
+  .tag{
+    font-size:11px;
+    font-weight:700;
+    padding:2px 7px;
+    border-radius:999px;
+  }
+  .tag-yes{ background:var(--yes); color:var(--yes-ink); }
+  .tag-no{ background:var(--no); color:var(--no-ink); }
+  .tag-maybe{ background:var(--maybe); color:var(--maybe-ink); }
+  .tag-pending{ background:var(--paper-2); color:var(--ink-soft); border:1px solid var(--line); }
+
+  @media (max-width:480px){
+    .card{ padding:28px 20px; }
+    .photo-frame{ min-height:44vh; }
+    .photo-frame img{ max-height:46vh; }
+    .results-grid{ grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<a href="#" id="resultsLink" class="corner-link">Results (for Lo)</a>
+
+<section id="screen-name" class="screen">
+  <div class="card name-card">
+    <p class="eyebrow">Grandpa's Photos</p>
+    <h1>Who's picking today?</h1>
+    <p class="sub">Type your name once &mdash; this device will remember it.</p>
+    <div id="continueAs" class="continue-as hidden">
+      <button id="btnContinueAs" class="btn btn-primary btn-large"></button>
+      <button id="btnSwitchName" class="link-btn">Use a different name</button>
+    </div>
+    <div id="nameEntry" class="name-entry">
+      <input id="voterInput" type="text" placeholder="Your first name" maxlength="40" autocomplete="off" />
+      <button id="btnStart" class="btn btn-primary btn-large">Start looking through photos</button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-review" class="screen hidden">
+  <div class="topbar">
+    <span id="voterBadge" class="voter-badge"></span>
+    <button id="btnMyList" class="my-list-btn">My list so far</button>
+    <span id="progressText" class="progress-text"></span>
+  </div>
+  <div class="progress-track"><div id="progressFill" class="progress-fill" style="width:0%"></div></div>
+
+  <div class="stage">
+    <button id="btnPrev" class="nav-btn nav-prev" aria-label="Previous photo">&lsaquo;</button>
+    <div class="photo-frame">
+      <img id="photoImg" src="" alt="Family photo" />
+    </div>
+    <button id="btnNext" class="nav-btn nav-next" aria-label="Next photo">&rsaquo;</button>
+  </div>
+
+  <div class="choice-row">
+    <button class="choice-btn choice-no" data-value="no"><span class="choice-icon">&#10005;</span><span>No</span></button>
+    <button class="choice-btn choice-maybe" data-value="maybe"><span class="choice-icon">?</span><span>Maybe</span></button>
+    <button class="choice-btn choice-yes" data-value="yes"><span class="choice-icon">&#10003;</span><span>Yes!</span></button>
+  </div>
+  <p id="currentChoiceNote" class="current-choice-note"></p>
+</section>
+
+<section id="screen-done" class="screen hidden">
+  <div class="card">
+    <p class="eyebrow" id="doneEyebrow">All caught up</p>
+    <h1 id="doneHeading">You've gone through every photo!</h1>
+    <p class="sub" id="doneSummary"></p>
+    <textarea id="exportBox" class="export-box" readonly rows="8"></textarea>
+    <div class="done-actions">
+      <button id="btnEmailList" class="btn btn-primary btn-large">Email my list to Lo</button>
+      <p class="copy-note">Opens your Mail app with everything already filled in &mdash; just hit send.</p>
+      <button id="btnCopyList" class="btn btn-secondary">Copy my list</button>
+      <button id="btnSaveList" class="btn btn-secondary">Save my list as a file</button>
+      <p class="copy-note" id="copyNote">Or copy it, then paste into a text or email to Lo.</p>
+      <button id="btnReviewYes" class="btn btn-secondary">Review my &quot;Yes&quot; picks</button>
+      <button id="btnBackToReview" class="btn btn-secondary">Keep going where I left off</button>
+      <button id="btnRestart" class="btn btn-secondary">Start over from the beginning</button>
+      <button id="btnSwitchName2" class="link-btn">Switch person</button>
+    </div>
+  </div>
+</section>
+
+<section id="screen-results" class="screen hidden">
+  <div class="results-header">
+    <div>
+      <p class="eyebrow">For Lo</p>
+      <h1>Everyone's picks</h1>
+      <p class="sub" id="resultsSummary"></p>
+      <p class="copy-note">Only shows picks made on this device &mdash; if someone picked on their own phone, use their "Copy my list" button instead.</p>
+    </div>
+    <div class="results-actions">
+      <button id="btnCopyResults" class="btn btn-primary">Copy shortlist</button>
+      <button id="btnDownload" class="btn btn-secondary">Save as a file</button>
+      <a href="#" id="btnBackToPicking" class="link-btn">&larr; Back to picking</a>
+    </div>
+  </div>
+  <div id="resultsGrid" class="results-grid"></div>
+</section>
+
+<script>
+(function(){
+  "use strict";
+
+  var MANIFEST = null;   // [{id, original}]
+  var allPicks = {};     // { voterSlug: { name, votes: {photoId: value} } } — this device only
+  var voterName = null;
+  var voterSlug = null;
+  var currentIndex = 0;
+  var downloadsCap = null;
+  var flashTimer = null;
+  var LO_EMAIL = "laurenchapman2018@gmail.com";
+
+  // ---------- optional: live shared results via a Google Form ----------
+  // Fill these in once the Google Form is set up (see setup notes) to make
+  // every vote also land in a shared Google Sheet automatically. Left blank,
+  // this silently does nothing — nothing else on the page depends on it.
+  var GFORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeHVCpqd9Y5GOfr9O3ZW0L3tPKfd0sxn9vvOzqsXsScpGeU2w/formResponse";
+  var GFORM_ENTRIES = {
+    name: "entry.742996215",
+    photo: "entry.1325094739",
+    choice: "entry.1238367957"
+  };
+
+  function reportVoteToSheet(photoOriginal, value){
+    if (!GFORM_URL || !GFORM_ENTRIES.name || !GFORM_ENTRIES.photo || !GFORM_ENTRIES.choice) return;
+    try{
+      var fd = new FormData();
+      fd.append(GFORM_ENTRIES.name, voterName || "");
+      fd.append(GFORM_ENTRIES.photo, photoOriginal || "");
+      fd.append(GFORM_ENTRIES.choice, value || "");
+      fetch(GFORM_URL, { method: "POST", mode: "no-cors", body: fd }).catch(function(){});
+    }catch(e){}
+  }
+
+  var els = {};
+  function q(id){ return document.getElementById(id); }
+
+  function slugify(name){
+    var s = (name || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    return s.slice(0, 40) || "guest";
+  }
+
+  function loadLocal(key, fallback){
+    try{
+      var v = localStorage.getItem(key);
+      return v ? JSON.parse(v) : fallback;
+    }catch(e){ return fallback; }
+  }
+  function saveLocal(key, val){
+    try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){}
+  }
+
+  function saveAllPicks(){ saveLocal("allPicks", allPicks); }
+
+  function myVotes(){
+    return (allPicks[voterSlug] && allPicks[voterSlug].votes) || {};
+  }
+
+  function firstUnvotedIndex(){
+    var votes = myVotes();
+    for (var i=0;i<MANIFEST.length;i++){
+      if (!votes[MANIFEST[i].id]) return i;
+    }
+    return MANIFEST.length; // all done
+  }
+
+  var SHARD_SIZE = 25;
+  var shardCache = {}; // shardIdx -> Promise<{id: base64}>
+
+  function shardPath(shardIdx){
+    var s = String(shardIdx);
+    while (s.length < 2) s = "0" + s;
+    return "data/shard_" + s + ".json";
+  }
+  function getShard(shardIdx){
+    if (!shardCache[shardIdx]){
+      shardCache[shardIdx] = fetch(shardPath(shardIdx)).then(function(r){ return r.json(); });
+    }
+    return shardCache[shardIdx];
+  }
+  function photoDataUrl(idx){
+    if (idx < 0 || idx >= MANIFEST.length) return Promise.resolve(null);
+    var shardIdx = Math.floor(idx / SHARD_SIZE);
+    var id = MANIFEST[idx].id;
+    return getShard(shardIdx).then(function(shard){
+      return shard[id] ? ("data:image/jpeg;base64," + shard[id]) : null;
+    });
+  }
+  function preload(idx){
+    if (idx < 0 || idx >= MANIFEST.length) return;
+    getShard(Math.floor(idx / SHARD_SIZE));
+  }
+
+  // ---------- capability plumbing ----------
+  function initCapabilities(){
+    if (window.claude && typeof window.claude.use === "function"){
+      window.claude.use("downloads").then(function(d){ downloadsCap = d; });
+    }
+  }
+
+  function copyText(str, flashEl){
+    var done = function(ok){
+      if (!flashEl) return;
+      clearTimeout(flashTimer);
+      var original = flashEl.getAttribute("data-original-label") || flashEl.textContent;
+      flashEl.setAttribute("data-original-label", original);
+      flashEl.textContent = ok ? "Copied!" : "Couldn't copy — try selecting the text";
+      flashEl.classList.toggle("copied-flash", ok);
+      flashTimer = setTimeout(function(){
+        flashEl.textContent = original;
+        flashEl.classList.remove("copied-flash");
+      }, 1800);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(str).then(function(){ done(true); }).catch(function(){ fallbackCopy(str, done); });
+    } else {
+      fallbackCopy(str, done);
+    }
+  }
+
+  function fallbackCopy(str, done){
+    try{
+      var ta = document.createElement("textarea");
+      ta.value = str;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      var ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      done(ok);
+    }catch(e){ done(false); }
+  }
+
+  // ---------- screens ----------
+  function showScreen(name){
+    ["screen-name","screen-review","screen-done","screen-results"].forEach(function(id){
+      q(id).classList.toggle("hidden", id !== name);
+    });
+    q("resultsLink").classList.toggle("hidden", name === "screen-results");
+  }
+
+  function goToNameScreen(){
+    var saved = loadLocal("voterName", null);
+    if (saved){
+      els.continueAs.classList.remove("hidden");
+      els.nameEntry.classList.add("hidden");
+      els.btnContinueAs.textContent = "Continue as " + saved;
+    } else {
+      els.continueAs.classList.add("hidden");
+      els.nameEntry.classList.remove("hidden");
+    }
+    showScreen("screen-name");
+  }
+
+  function startAs(name){
+    name = (name || "").trim();
+    if (!name) return;
+    voterName = name;
+    voterSlug = slugify(name);
+    saveLocal("voterName", name);
+    currentIndex = firstUnvotedIndex();
+    if (currentIndex >= MANIFEST.length){
+      renderDone(true);
+      showScreen("screen-done");
+    } else {
+      showScreen("screen-review");
+      renderReview();
+    }
+  }
+
+  function renderReview(){
+    els.voterBadge.textContent = voterName;
+    var votes = myVotes();
+    var total = MANIFEST.length;
+    els.progressText.textContent = (currentIndex+1) + " of " + total;
+    els.progressFill.style.width = Math.round(((currentIndex)/total)*100) + "%";
+
+    var renderIndex = currentIndex;
+    els.photoImg.classList.add("loading");
+    photoDataUrl(renderIndex).then(function(url){
+      if (renderIndex !== currentIndex || !url) return;
+      els.photoImg.src = url;
+      els.photoImg.classList.remove("loading");
+    });
+    els.btnPrev.disabled = currentIndex <= 0;
+
+    var current = votes[MANIFEST[currentIndex].id];
+    [].forEach.call(document.querySelectorAll(".choice-btn"), function(btn){
+      btn.classList.toggle("active", btn.getAttribute("data-value") === current);
+    });
+    els.currentChoiceNote.textContent = current ? ("You said: " + current.charAt(0).toUpperCase()+current.slice(1)) : "";
+
+    preload(currentIndex+1);
+    preload(currentIndex+2);
+    preload(currentIndex+3);
+  }
+
+  function castVote(value){
+    var photo = MANIFEST[currentIndex];
+    if (!allPicks[voterSlug]) allPicks[voterSlug] = { name: voterName, votes: {} };
+    allPicks[voterSlug].name = voterName;
+    allPicks[voterSlug].votes[photo.id] = value;
+    saveAllPicks();
+    reportVoteToSheet(photo.original, value);
+    goNext();
+  }
+
+  function goNext(){
+    if (currentIndex < MANIFEST.length - 1){
+      currentIndex++;
+      renderReview();
+    } else {
+      renderDone(true);
+      showScreen("screen-done");
+    }
+  }
+  function goPrev(){
+    if (currentIndex > 0){ currentIndex--; renderReview(); }
+  }
+
+  function buildExportText(finished){
+    var votes = myVotes();
+    var yesList = [], maybeList = [], noList = [];
+    MANIFEST.forEach(function(p){
+      var v = votes[p.id];
+      if (v === "yes") yesList.push(p.original);
+      else if (v === "maybe") maybeList.push(p.original);
+      else if (v === "no") noList.push(p.original);
+    });
+    var votedCount = yesList.length + maybeList.length + noList.length;
+    var lines = [];
+    lines.push((voterName || "Someone") + "'s picks for Grandpa's slideshow");
+    lines.push(finished
+      ? ("Went through all " + MANIFEST.length + " photos.")
+      : ("Reviewed " + votedCount + " of " + MANIFEST.length + " photos so far."));
+    lines.push("");
+    lines.push("YES (" + yesList.length + ")");
+    yesList.forEach(function(name){ lines.push("  " + name); });
+    lines.push("");
+    lines.push("MAYBE (" + maybeList.length + ")");
+    maybeList.forEach(function(name){ lines.push("  " + name); });
+    lines.push("");
+    lines.push("NO (" + noList.length + ") — left out of the list below for brevity");
+    lines.push("");
+    lines.push("Sent from Grandpa's Photo Picks.");
+    return lines.join("\n");
+  }
+
+  function buildEmailBody(finished){
+    var full = buildExportText(finished);
+    if (full.length <= 1500) return full;
+    var votes = myVotes();
+    var counts = { yes:0, no:0, maybe:0 };
+    MANIFEST.forEach(function(p){
+      var v = votes[p.id];
+      if (v && counts.hasOwnProperty(v)) counts[v]++;
+    });
+    return (voterName || "Someone") + "'s picks for Grandpa's slideshow\n\n" +
+      "I picked " + counts.yes + " \"yes\" and " + counts.maybe + " \"maybe\" out of " + MANIFEST.length + " photos.\n\n" +
+      "My full list was too long to fit in this email, so I copied or saved it separately — use that instead of this message for the complete list.";
+  }
+
+  function emailMyList(){
+    var finished = currentIndex >= MANIFEST.length;
+    var subject = (voterName || "Someone") + "'s picks for Grandpa's slideshow";
+    var body = buildEmailBody(finished);
+    window.location.href = "mailto:" + encodeURIComponent(LO_EMAIL) +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(body);
+  }
+
+  function renderDone(finished){
+    var votes = myVotes();
+    var counts = { yes:0, no:0, maybe:0 };
+    MANIFEST.forEach(function(p){
+      var v = votes[p.id];
+      if (v && counts.hasOwnProperty(v)) counts[v]++;
+    });
+    var votedCount = counts.yes + counts.no + counts.maybe;
+    if (finished){
+      els.doneEyebrow.textContent = "All caught up";
+      els.doneHeading.textContent = "You've gone through every photo!";
+    } else {
+      els.doneEyebrow.textContent = "My list so far";
+      els.doneHeading.textContent = "Here's what you've picked so far";
+    }
+    els.doneSummary.textContent = voterName + ", you picked " + counts.yes + " \"yes\", " + counts.maybe + " \"maybe\", and " + counts.no + " \"no\" out of " + votedCount + " photos reviewed (" + MANIFEST.length + " total).";
+    els.exportBox.value = buildExportText(finished);
+    els.btnBackToReview.classList.toggle("hidden", finished || currentIndex >= MANIFEST.length);
+  }
+
+  // ---------- results (for Lo, this device only) ----------
+  function computeResults(){
+    var voters = Object.keys(allPicks).map(function(slug){ return allPicks[slug].name || slug; });
+    var rows = MANIFEST.map(function(p, i){
+      var tags = [];
+      var yesCount = 0, maybeCount = 0;
+      Object.keys(allPicks).forEach(function(slug){
+        var entry = allPicks[slug];
+        var v = entry.votes[p.id];
+        if (v === "yes") yesCount++;
+        if (v === "maybe") maybeCount++;
+        tags.push({ name: entry.name || slug, value: v || null });
+      });
+      return { index:i, id:p.id, original:p.original, yesCount:yesCount, maybeCount:maybeCount, tags:tags };
+    });
+    rows.sort(function(a,b){
+      if (b.yesCount !== a.yesCount) return b.yesCount - a.yesCount;
+      if (b.maybeCount !== a.maybeCount) return b.maybeCount - a.maybeCount;
+      return a.index - b.index;
+    });
+    return { voters: voters, rows: rows };
+  }
+
+  function renderResults(){
+    var data = computeResults();
+    var anyYes = data.rows.filter(function(r){ return r.yesCount > 0; }).length;
+    els.resultsSummary.textContent = data.voters.length
+      ? (data.voters.join(" & ") + " have started picking. " + anyYes + " of " + MANIFEST.length + " photos have at least one \"yes\" so far.")
+      : "No one has started picking yet.";
+
+    var html = data.rows.map(function(r){
+      var tagsHtml = r.tags.map(function(t){
+        var cls = t.value ? ("tag-" + t.value) : "tag-pending";
+        var label = t.value ? (t.name + ": " + t.value.charAt(0).toUpperCase()+t.value.slice(1)) : (t.name + ": —");
+        return '<span class="tag ' + cls + '">' + escapeHtml(label) + '</span>';
+      }).join("");
+      return '<div class="result-card">' +
+        '<img data-idx="' + r.index + '" alt="" />' +
+        '<div class="result-meta">' +
+          '<div class="result-index">#' + (r.index+1) + '</div>' +
+          '<div class="result-tags">' + tagsHtml + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join("");
+    els.resultsGrid.innerHTML = html;
+    loadResultsImages();
+  }
+
+  function loadResultsImages(){
+    var imgs = [].slice.call(els.resultsGrid.querySelectorAll("img[data-idx]"));
+    var byShard = {};
+    imgs.forEach(function(img){
+      var idx = parseInt(img.getAttribute("data-idx"), 10);
+      var shardIdx = Math.floor(idx / SHARD_SIZE);
+      (byShard[shardIdx] = byShard[shardIdx] || []).push(img);
+    });
+    Object.keys(byShard).forEach(function(shardIdx){
+      getShard(parseInt(shardIdx,10)).then(function(shard){
+        byShard[shardIdx].forEach(function(img){
+          var idx = parseInt(img.getAttribute("data-idx"), 10);
+          var id = MANIFEST[idx].id;
+          if (shard[id]) img.src = "data:image/jpeg;base64," + shard[id];
+        });
+      });
+    });
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function resultsShortlistText(){
+    var data = computeResults();
+    var shortlisted = data.rows.filter(function(r){ return r.yesCount > 0; });
+    var lines = [];
+    lines.push("Grandpa's slideshow — photos with at least one \"yes\" pick");
+    lines.push("Generated " + new Date().toLocaleString() + " (this device only)");
+    lines.push("");
+    shortlisted.forEach(function(r){
+      var who = r.tags.filter(function(t){return t.value==="yes";}).map(function(t){return t.name;}).join(", ");
+      lines.push(r.original + "   (yes: " + who + ")");
+    });
+    lines.push("");
+    lines.push("Total: " + shortlisted.length + " of " + MANIFEST.length + " photos.");
+    return lines.join("\n");
+  }
+
+  function downloadShortlist(){
+    var text = resultsShortlistText();
+    if (downloadsCap){
+      downloadsCap.save({ filename: "grandpas-photo-shortlist.txt", data: text }).catch(function(){});
+    }
+  }
+
+  function copyResultsShortlist(){
+    copyText(resultsShortlistText(), els.btnCopyResults);
+  }
+
+  function downloadMyList(){
+    var finished = currentIndex >= MANIFEST.length;
+    var text = buildExportText(finished);
+    var fname = "grandpas-photo-picks-" + voterSlug + ".txt";
+    if (downloadsCap){
+      downloadsCap.save({ filename: fname, data: text }).catch(function(){});
+    }
+  }
+
+  // ---------- wiring ----------
+  function wire(){
+    els.continueAs = q("continueAs");
+    els.nameEntry = q("nameEntry");
+    els.btnContinueAs = q("btnContinueAs");
+    els.btnSwitchName = q("btnSwitchName");
+    els.voterInput = q("voterInput");
+    els.btnStart = q("btnStart");
+    els.voterBadge = q("voterBadge");
+    els.progressText = q("progressText");
+    els.progressFill = q("progressFill");
+    els.photoImg = q("photoImg");
+    els.btnPrev = q("btnPrev");
+    els.btnNext = q("btnNext");
+    els.btnMyList = q("btnMyList");
+    els.currentChoiceNote = q("currentChoiceNote");
+    els.doneEyebrow = q("doneEyebrow");
+    els.doneHeading = q("doneHeading");
+    els.doneSummary = q("doneSummary");
+    els.exportBox = q("exportBox");
+    els.btnEmailList = q("btnEmailList");
+    els.btnCopyList = q("btnCopyList");
+    els.btnSaveList = q("btnSaveList");
+    els.copyNote = q("copyNote");
+    els.btnReviewYes = q("btnReviewYes");
+    els.btnBackToReview = q("btnBackToReview");
+    els.btnRestart = q("btnRestart");
+    els.btnSwitchName2 = q("btnSwitchName2");
+    els.resultsSummary = q("resultsSummary");
+    els.resultsGrid = q("resultsGrid");
+    els.btnCopyResults = q("btnCopyResults");
+    els.btnDownload = q("btnDownload");
+    els.btnBackToPicking = q("btnBackToPicking");
+    els.resultsLink = q("resultsLink");
+
+    els.btnContinueAs.addEventListener("click", function(){ startAs(loadLocal("voterName", "")); });
+    els.btnSwitchName.addEventListener("click", function(){
+      els.continueAs.classList.add("hidden");
+      els.nameEntry.classList.remove("hidden");
+      els.voterInput.value = "";
+      els.voterInput.focus();
+    });
+    els.btnStart.addEventListener("click", function(){ startAs(els.voterInput.value); });
+    els.voterInput.addEventListener("keydown", function(e){ if (e.key === "Enter") startAs(els.voterInput.value); });
+
+    [].forEach.call(document.querySelectorAll(".choice-btn"), function(btn){
+      btn.addEventListener("click", function(){ castVote(btn.getAttribute("data-value")); });
+    });
+    els.btnPrev.addEventListener("click", goPrev);
+    els.btnNext.addEventListener("click", goNext);
+    els.btnMyList.addEventListener("click", function(){
+      renderDone(false);
+      showScreen("screen-done");
+    });
+
+    document.addEventListener("keydown", function(e){
+      if (q("screen-review").classList.contains("hidden")) return;
+      if (e.key === "ArrowLeft") goPrev();
+      else if (e.key === "ArrowRight") goNext();
+      else if (e.key === "1" || e.key.toLowerCase() === "n") castVote("no");
+      else if (e.key === "2" || e.key.toLowerCase() === "m") castVote("maybe");
+      else if (e.key === "3" || e.key.toLowerCase() === "y") castVote("yes");
+    });
+
+    els.btnEmailList.addEventListener("click", emailMyList);
+    els.btnCopyList.addEventListener("click", function(){ copyText(els.exportBox.value, els.btnCopyList); });
+    els.btnSaveList.addEventListener("click", downloadMyList);
+    els.btnBackToReview.addEventListener("click", function(){
+      currentIndex = Math.min(currentIndex, MANIFEST.length - 1);
+      showScreen("screen-review");
+      renderReview();
+    });
+    els.btnRestart.addEventListener("click", function(){ currentIndex = 0; showScreen("screen-review"); renderReview(); });
+    els.btnReviewYes.addEventListener("click", function(){
+      var votes = myVotes();
+      var firstYes = MANIFEST.findIndex(function(p){ return votes[p.id] === "yes"; });
+      currentIndex = firstYes >= 0 ? firstYes : 0;
+      showScreen("screen-review");
+      renderReview();
+    });
+    els.btnSwitchName2.addEventListener("click", function(){ goToNameScreen(); });
+
+    els.resultsLink.addEventListener("click", function(e){ e.preventDefault(); renderResults(); showScreen("screen-results"); });
+    els.btnBackToPicking.addEventListener("click", function(e){ e.preventDefault(); goToNameScreen(); });
+    els.btnCopyResults.addEventListener("click", copyResultsShortlist);
+    els.btnDownload.addEventListener("click", downloadShortlist);
+  }
+
+  function boot(){
+    wire();
+    allPicks = loadLocal("allPicks", {});
+    fetch("manifest_final.json").then(function(r){ return r.json(); }).then(function(data){
+      MANIFEST = data.photos;
+      initCapabilities();
+      goToNameScreen();
+    });
+  }
+
+  if (document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+</body>
+</html>
