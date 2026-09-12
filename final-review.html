@@ -527,7 +527,8 @@
   }
   function photoDataUrl(idx){
     if (idx < 0 || idx >= MANIFEST.length) return Promise.resolve(null);
-    var shardIdx = Math.floor(idx / SHARD_SIZE);
+    var origIdx = (MANIFEST[idx].origIdx != null) ? MANIFEST[idx].origIdx : idx;
+    var shardIdx = Math.floor(origIdx / SHARD_SIZE);
     var id = MANIFEST[idx].id;
     return getShard(shardIdx).then(function(shard){
       return shard[id] ? ("data:image/jpeg;base64," + shard[id]) : null;
@@ -535,7 +536,8 @@
   }
   function preload(idx){
     if (idx < 0 || idx >= MANIFEST.length) return;
-    getShard(Math.floor(idx / SHARD_SIZE));
+    var origIdx = (MANIFEST[idx].origIdx != null) ? MANIFEST[idx].origIdx : idx;
+    getShard(Math.floor(origIdx / SHARD_SIZE));
   }
 
   // ---------- capability plumbing ----------
@@ -791,7 +793,8 @@
     var byShard = {};
     imgs.forEach(function(img){
       var idx = parseInt(img.getAttribute("data-idx"), 10);
-      var shardIdx = Math.floor(idx / SHARD_SIZE);
+      var origIdx = (MANIFEST[idx] && MANIFEST[idx].origIdx != null) ? MANIFEST[idx].origIdx : idx;
+      var shardIdx = Math.floor(origIdx / SHARD_SIZE);
       (byShard[shardIdx] = byShard[shardIdx] || []).push(img);
     });
     Object.keys(byShard).forEach(function(shardIdx){
